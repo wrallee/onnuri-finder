@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>온누리 Finder</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+<style type="text/css">
+body {
+	font-family: 'Do Hyeon', sans-serif;!important;
+}
+
+table#resultTable thead tr th,
+table#resultTable tbody tr td {
+	text-align: center;
+	font-size: large;
+	white-space: nowrap;
+	width: 50%;
+}
+.jumbotron {
+	padding: 1.5rem 1rem;
+	margin-bottom: 1rem;
+}
+.jumbotron a {
+	color: #212529;
+	text-decoration: none;
+}
+.form-group, .input-group {
+	margin-bottom: 0.7rem;
+}
+.loading, .blank-result {
+	height: 424px;
+	margin-bottom: 16px
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron text-center">
+		<a href="#">
+			<h3>온누리 상품권 가맹점포</h3>
+		</a>
+	</div>
+	<form action="javascript:getResultTable(1);">
+		<div class="form-group">
+			<div class="form-row">
+				<div class="col-sm">
+					<select class="form-control" id="city_cd" name="city_cd" onchange="setSelectBox('N102', 'county_cd', this.value);" style="width:100%">
+					    <option value="">전체</option>
+					    <option value="02">서울</option>
+					    <option value="31" selected>경기</option>
+					    <option value="32">인천</option>
+					    <option value="33">강원</option>
+					    <option value="41">충남</option>
+					    <option value="42">대전</option>
+					    <option value="43">충북</option>
+					    <option value="51">부산</option>
+					    <option value="52">울산</option>
+					    <option value="53">대구</option>
+					    <option value="54">경북</option>
+					    <option value="55">경남</option>
+					    <option value="61">전남</option>
+					    <option value="62">광주</option>
+					    <option value="63">전북</option>
+					    <option value="64">제주</option>
+					    <option value="65">세종</option>
+					</select>
+				</div>
+				<div class="col-sm">
+					<select class="form-control" id="county_cd" name="county_cd" style="width:100%">
+						<option value="">전체</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<select class="form-control custom-select" id="searchKind" name="searchKind">
+								<option value="B.ITEM" selected>품목명</option>
+								<option value="A.MARKET_NAME">시장명</option>
+								<option value="B.SHOP_NAME">점포명</option>
+							</select>
+						</div>
+						<input class="form-control" type="text" id="searchText" name="searchText" value="" /></td>
+						<div class="input-group-prepend">
+							<button class="btn btn-primary" type="button" onclick="javascript:getResultTable(1);">
+							<i class="fa fa-search"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="table-responsive">
+		<table class="table table-bordered" id="resultTable">
+			<thead class="table-primary">
+				<tr>
+					<th>상호명</th>
+					<th>분류</th>
+					<th>시장명</th>
+					<th>주소</th>
+				</tr>
+			</thead>
+			<tbody id="resultTableBody">
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+				<tr><td></td><td></td><td></td><td></td></tr>
+			</tbody>
+		</table>
+		<div id="blankResult" class="text-center blank-result">검색 결과가 없습니다.</div>
+		<div id="loading" style="display: flex" class="text-center justify-content-center loading">
+			<div class="spinner-border text-primary align-self-center"></div>
+		</div>
+	</div>
+	<ul class="pagination justify-content-center" id="pagination">
+	  <li class="page-item"><a class="page-link" href="javascript:void(0)">Prev</a></li>
+	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(1)">1</a></li>
+	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(2)">2</a></li>
+	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(3)">3</a></li>
+	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(4)">4</a></li>
+	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(5)">5</a></li>
+	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(6)">Next</a></li>
+	</ul>
+</div>
+
+</body>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#searchText").keydown(function(key){
+		if (key.keyCode == 13) {
+			getResultTable(1);
+		}
+	});
+	var city_cd = $('select[name=city_cd]').val();
+	setSelectBox('N102', 'county_cd', city_cd);
+	getResultTable(1);
+});
+
+function getResultTable(cpage) {
+	$('#blankResult').hide();
+	$('#resultTableBody').hide();
+	$('#loading').css('display','flex');
+	
+	var rowElement = $('#resultTableBody tr:first-child');
+	for (var i = 0; i < 10; i++) {
+		for (var j = 1; j <= 4; j++) {
+			rowElement.children(':nth-child('+j+')').text('');
+		}
+		rowElement = rowElement.next();
+	}
+	
+	var shop_table	= 'SJTT.MKT_PAPER_SHOP';
+	var city_cd		= $('select[name=city_cd]').val();
+	var county_cd	= $('select[name=county_cd]').val();
+	var txtKey		= $('#searchKind').val();
+	var txtParam	= $('#searchText').val();
+	var data_url = 'http://www.sbiz.or.kr/sijangtong/nation/onnuri/pop/onnuriShopListKeyPopup.do'
+		+ '?cpage=' + cpage
+		+ '&county_cd='	+ county_cd
+		+ '&shop_table='+ shop_table
+		+ '&city_cd='	+ city_cd
+		+ '&txtKey='	+ txtKey
+		+ '&txtParam='	+ txtParam;
+	$.ajax({
+		url: data_url,
+		dataType: 'html',
+		success: function(html) {
+			var resultTable = '';
+			var htmlDom = new DOMParser().parseFromString(html, 'text/html');
+			var tableRowDom = htmlDom
+							.documentElement
+							.querySelector('table tr:nth-child(4) td table tbody')
+							.rows;
+			var i = 1;
+			rowElement = $('#resultTableBody tr:first-child');
+			for (; i < tableRowDom.length; i++) {
+				var x = tableRowDom.item(i);
+				if (x.cells.length == 1) {
+					$('#loading').css('display','none');
+					
+					//$('#resultTable').show();
+					$('#blankResult').show();
+					return;
+				}
+				rowElement.children(':nth-child(1)').text(x.cells.item(2).innerHTML);
+				rowElement.children(':nth-child(2)').text(x.cells.item(6).innerHTML);
+				rowElement.children(':nth-child(3)').text(x.cells.item(1).innerHTML);
+				rowElement.children(':nth-child(4)').text(x.cells.item(3).innerHTML);
+				2613
+				rowElement = rowElement.next();
+			}
+			
+			$('#loading').css('display','none');
+			
+			$('#resultTableBody').show();
+		}
+	});
+	
+	setPagination(cpage);
+}
+
+function setPagination(cpage) {
+	var childIdx = 1;
+	var std = Math.floor(cpage / 5) * 5;
+	for (var i = std; i <= std + 6; i++) {
+		var func = 'javascript:getResultTable('+i+')';
+		if (i == 0)
+			func = 'javascript:void(0)';
+		
+		$('#pagination li:nth-child('+childIdx+') a').attr('href', func);
+		
+		if (childIdx == 1)
+			$('#pagination li:nth-child('+childIdx+') a').text('Prev');
+		else if (childIdx == 7)
+			$('#pagination li:nth-child('+childIdx+') a').text('Next');
+		else
+			$('#pagination li:nth-child('+childIdx+') a').text(i);
+		
+		if (i == cpage)
+			$('#pagination li:nth-child('+childIdx+')').addClass('active');
+		else
+			$('#pagination li:nth-child('+childIdx+')').removeClass('active');
+		
+		childIdx++;
+	}
+}
+
+// 시.도 선택시 군/구 Select 수정
+function setSelectBox(groupCode, targetId, val){
+    var id = '#county_cd';
+    //var val = obj.value;
+    if( val == '' ){
+        $(id).html('');
+        $(id).html("<option value=''>없음</option>");
+        return;
+    }
+
+    $.ajax({
+        url: "http://www.sbiz.or.kr/sijangtong/common/code/readSubCodeListAjax.do"
+        ,datatype: "json"
+        ,data: { code_grp:groupCode, cm_code:val }
+        ,success: function(data) {
+            if(data != null) {
+                var html = "";
+                var sb = new StringBuilder();
+				
+				//filter
+				var chkFilter = "서울|경기|인천|강원|충남|대전|충북|부산|울산|대구|경북|경남|전남|광주|전북|제주";
+				
+                $(id).html('');
+                sb.append("<option value>전체</option>");
+				$.each(data, function(index, itemData) {
+					if (index != 0 && chkFilter.indexOf(itemData.code_nm) < 0) {
+					    sb.append("<option value=" + itemData.cm_code + ">" + itemData.code_nm + "</option>");
+					}
+
+                });
+                $(id).html(sb.toString());
+
+            } else {
+                $(id).html('');
+            }
+
+        }
+    });
+}
+
+function StringBuilder(value) {
+	this.strings = new Array("");
+	this.append(value);
+}
+StringBuilder.prototype.append = function (value){
+	if (value)	{
+		this.strings.push(value);
+	}
+};
+StringBuilder.prototype.clear = function (){
+	this.strings.length = 1;
+};
+StringBuilder.prototype.toString = function (){
+	return this.strings.join("");
+};
+</script>
+</html>
