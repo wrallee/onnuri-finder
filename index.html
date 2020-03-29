@@ -44,9 +44,11 @@ table#resultTable tbody tr td {
 <body>
 <div class="container">
 	<div class="jumbotron text-center">
-		<a href="#">
-			<h3>온누리 상품권 가맹점포</h3>
-		</a>
+		<h3>
+			<a href="http://wrallee.iptime.org">
+				온누리 상품권 가맹점포
+			</a>
+		</h3>
 	</div>
 	<form action="javascript:getResultTable(1);">
 		<div class="form-group">
@@ -100,13 +102,16 @@ table#resultTable tbody tr td {
 					</div>
 				</div>
 			</div>
+			<div>
+				<h6 class="text-danger float-right">검색결과가 나오지 않을 경우 점포명으로 검색해주세요.</h6>
+			</div>
 		</div>
 	</form>
 	<div class="table-responsive">
 		<table class="table table-bordered" id="resultTable">
 			<thead class="table-primary">
 				<tr>
-					<th>상호명</th>
+					<th>점포명</th>
 					<th>분류</th>
 					<th>시장명</th>
 					<th>주소</th>
@@ -130,6 +135,7 @@ table#resultTable tbody tr td {
 			<div class="spinner-border text-primary align-self-center"></div>
 		</div>
 	</div>
+	<div>
 	<ul class="pagination justify-content-center" id="pagination">
 	  <li class="page-item"><a class="page-link" href="javascript:void(0)">Prev</a></li>
 	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(1)">1</a></li>
@@ -139,6 +145,10 @@ table#resultTable tbody tr td {
 	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(5)">5</a></li>
 	  <li class="page-item"><a class="page-link" href="javascript:getResultTable(6)">Next</a></li>
 	</ul>
+	</div>
+	<div class="text-secondary float-right">
+		<h6><small>출처: 전통시장 통통(소상공인시장진흥공단)</small></h6>
+	</div>
 </div>
 
 </body>
@@ -183,7 +193,6 @@ function getResultTable(cpage) {
 		url: data_url,
 		dataType: 'html',
 		success: function(html) {
-			var resultTable = '';
 			var htmlDom = new DOMParser().parseFromString(html, 'text/html');
 			var tableRowDom = htmlDom
 							.documentElement
@@ -204,7 +213,7 @@ function getResultTable(cpage) {
 				rowElement.children(':nth-child(2)').text(x.cells.item(6).innerHTML);
 				rowElement.children(':nth-child(3)').text(x.cells.item(1).innerHTML);
 				rowElement.children(':nth-child(4)').text(x.cells.item(3).innerHTML);
-				2613
+				
 				rowElement = rowElement.next();
 			}
 			
