@@ -174,7 +174,7 @@ function getResultTable(cpage) {
 	$('#loading').css('display','flex');
 	
 	var rowElement = $('#resultTableBody tr:first-child');
-	for (var i = 0; i < 10; i++) {
+	for (var i = 1; i <= 10; i++) {
 		for (var j = 1; j <= 4; j++) {
 			rowElement.children(':nth-child('+j+')').text('');
 		}
@@ -186,37 +186,39 @@ function getResultTable(cpage) {
 	var county_cd	= $('select[name=county_cd]').val();
 	var txtKey		= $('#searchKind').val();
 	var txtParam	= $('#searchText').val();
-	var data_url = 'http://www.sbiz.or.kr/sijangtong/nation/onnuri/pop/onnuriShopListKeyPopup.do'
-		+ '?cpage=' + cpage
-		+ '&county_cd='	+ county_cd
-		+ '&shop_table='+ shop_table
-		+ '&city_cd='	+ city_cd
-		+ '&txtKey='	+ txtKey
-		+ '&txtParam='	+ txtParam;
+		
 	$.ajax({
-		url: data_url,
+		url: 'http://www.sbiz.or.kr/sijangtong/nation/onnuri/pop/onnuriShopListKeyPopupAjax.do',
 		dataType: 'html',
+		data: {
+			cpage		: Math.ceil(cpage / 2),
+			county_cd	: county_cd,
+			shop_table	: shop_table,
+			city_cd		: city_cd,
+			txtKey		: txtKey,
+			txtParam	: txtParam
+		},
 		success: function(html) {
-			var htmlDom = new DOMParser().parseFromString(html, 'text/html');
-			var tableRowDom = htmlDom
-							.documentElement
-							.querySelector('table tr:nth-child(4) td table tbody')
-							.rows;
-			var i = 1;
+			htmlDoc = document.implementation.createHTMLDocument('');
+			htmlDoc.body.innerHTML = html;
+			
+			var tableDom = htmlDoc.querySelector('table tbody tr:nth-child(1) td table tbody').rows;
+			
 			rowElement = $('#resultTableBody tr:first-child');
-			for (; i < tableRowDom.length; i++) {
-				var x = tableRowDom.item(i);
-				if (x.cells.length == 1) {
+			var start = (cpage & 1) == 1 ? 0 : 10;
+			for (var i = 1 + start; i < tableDom.length; i++) {
+				var rowDom = tableDom.item(i);
+				if (rowDom.cells.length == 1) {
 					$('#loading').css('display','none');
 					
 					//$('#resultTable').show();
 					$('#blankResult').show();
 					return;
 				}
-				rowElement.children(':nth-child(1)').text(x.cells.item(2).innerText);
-				rowElement.children(':nth-child(2)').text(x.cells.item(6).innerText);
-				rowElement.children(':nth-child(3)').text(x.cells.item(1).innerText);
-				rowElement.children(':nth-child(4)').text(x.cells.item(3).innerText);
+				rowElement.children(':nth-child(1)').text(rowDom.cells.item(2).innerText);
+				rowElement.children(':nth-child(2)').text(rowDom.cells.item(6).innerText);
+				rowElement.children(':nth-child(3)').text(rowDom.cells.item(1).innerText);
+				rowElement.children(':nth-child(4)').text(rowDom.cells.item(3).innerText);
 				
 				rowElement = rowElement.next();
 			}
@@ -239,12 +241,7 @@ function setPagination(cpage) {
 			func = 'javascript:void(0)';
 		
 		$('#pagination li:nth-child('+childIdx+') a').attr('href', func);
-		
-		if (childIdx == 1)
-			$('#pagination li:nth-child('+childIdx+') a').text('Prev');
-		else if (childIdx == 7)
-			$('#pagination li:nth-child('+childIdx+') a').text('Next');
-		else
+		if (1 < childIdx && childIdx < 7)
 			$('#pagination li:nth-child('+childIdx+') a').text(i);
 		
 		if (i == cpage)
